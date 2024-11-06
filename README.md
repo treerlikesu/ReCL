@@ -1,2 +1,2 @@
 # ReCL
-R code for ReCL: C-learning for optimal treatment regimes for recurrent diseases
+Sample R code for C-learning for optimal treatment regimes for recurrent diseases
