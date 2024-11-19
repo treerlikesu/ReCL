@@ -21,13 +21,6 @@ Simu <- function(N, NS, t.fix, gen = 'tree'){
   for(iter in 1:NS){
     print(iter)
     
-    num.max = 300
-    while(num.max >= 300){
-      data.all <- data.generation.bin(N = N, tau = 4, gen = gen)
-      num.max <- max(data.all$num)
-    }
-    
-    
     pst <- PS.bin(data.all, PS = 'SL')
     psf <- PS.bin(data.all, PS = 'WRONG')
     
