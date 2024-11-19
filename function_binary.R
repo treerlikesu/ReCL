@@ -159,7 +159,7 @@ PS.bin <- function(data.all, PS = 'SL'){
   x3 <- x$x3
   prob <- data.all$prob
   
-  # 1. Fit the propensity score function
+  # Fit the propensity score function
   if(PS == 'SL'){
     PS.library <- c("SL.knn", "SL.randomForest","SL.glm")
     #xx <- data.frame(x1, x2, x3)
@@ -202,7 +202,7 @@ CLrec.bin <- function(data.all, ps, t.fix, mod.class = 'label ~ x1 + x2', ICW = 
   Ax3 <- x3*A
   prob <- data.all$prob
   
-  # 2. Estimate contrast/weight for data space expansion 
+  # Estimate contrast/weight for data space expansion 
   ## estimate thetai_AIPTW
   class <- sort(unique(A))
   num <- length(class)
