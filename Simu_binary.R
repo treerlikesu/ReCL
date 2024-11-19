@@ -56,27 +56,16 @@ Simu <- function(N, NS, t.fix, gen = 'tree'){
     
     acc.test[iter, ] <- c(test.sl$est.acc, test.drt$est.acc, test.drf$est.acc, test.smr$est.acc,
                           test.sur$est.acc, test.rd$est.acc, test.opt$est.acc)
-    con.test[[iter]] <- cbind(test.sl$freq.con, test.drt$freq.con, test.drf$freq.con, test.smr$freq.con,
-                              test.sur$freq.con, test.rd$freq.con, test.opt$freq.con)
-    non.test[[iter]] <- cbind(test.sl$freq.non, test.drt$freq.non, test.drf$freq.non, test.smr$freq.non,
-                              test.sur$freq.non, test.rd$freq.non, test.opt$freq.non)
-    num.con[iter,] <- c(mean(test.sl$est.con), mean(test.drt$est.con), mean(test.drf$est.con),
-                        mean(test.smr$est.con), mean(test.sur$est.con),
-                        mean(test.rd$est.con), mean(test.opt$est.con))
-    num.non[iter,] <- c(mean(test.sl$est.non), mean(test.drt$est.non), mean(test.drf$est.non),
-                        mean(test.smr$est.non), mean(test.sur$est.non),
-                        mean(test.rd$est.non), mean(test.opt$est.non))
+  
     num.test[iter,] <- c(mean(test.sl$est.num), mean(test.drt$est.num), mean(test.drf$est.num),
                          mean(test.smr$est.num), mean(test.sur$est.num),
                          mean(test.rd$est.num), mean(test.opt$est.num))
-    #names(con.test[[iter]]) <- c('CL-SL', 'CL-GLM', 'CL-Wrong', 'Obs', 'Random', 'Optimal')
-    #names(non.test[[iter]]) <- c('CL-SL', 'CL-GLM', 'CL-Wrong', 'Obs', 'Random', 'Optimal')
+   
   }
   colnames(acc.test) <- c('CL-PO', 'CL-DR-PST', 'CL-DR-PSF', 'SMR', 'First', 'Random', 'Optimal')
   colnames(num.test) <- c('CL-PO', 'CL-DR-PST', 'CL-DR-PSF', 'SMR', 'First', 'Random', 'Optimal')
   
-  return(list(acc.test = acc.test, con.test = con.test, non.test = non.test,
-              num.test = num.test, num.con = num.con, num.non = num.non))
+  return(list(acc.test = acc.test, num.non = num.non))
 }
 
 N = 400; NS = 20; t.fix = 3
