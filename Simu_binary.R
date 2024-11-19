@@ -83,8 +83,4 @@ N = 400; NS = 20; t.fix = 3
 res1 <- Simu(N, NS, t.fix = t.fix, gen = 'tree')
 N = 600; NS = 100; t.fix = 3
 res2 <- Simu(N, NS, t.fix = t.fix)
-cc = cbind(rep(-0.15,NS), rep(0, NS), rep(-0.13,NS), rep(0, NS), rep(0, NS))
-names = c('SMR', 'IPW-PST', 'IPW-PSF', 'Obs', 'Random')
-box.fun(res1$acc.test[,c(2,1,3,4,5)], 'Accurary Rate', 'time = 3', color = color)
-names = c('SMR', 'IPW-PST', 'IPW-PSF', 'Obs', 'Random', 'Optimal')
-bar.fun(res1$num.con[,c(1,3,2,4,5,6)], res1$num.non[,c(1,3,2,4,5,6)], main = 'time = 3', range= c(0, 12))
+
