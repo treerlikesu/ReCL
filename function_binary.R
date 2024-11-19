@@ -203,7 +203,6 @@ CLrec.bin <- function(data.all, ps, t.fix, mod.class = 'label ~ x1 + x2', ICW = 
   prob <- data.all$prob
   
   # Estimate contrast/weight for data space expansion 
-  ## estimate thetai_AIPTW
   class <- sort(unique(A))
   num <- length(class)
   mus <- matrix(NA, length(A), num)
@@ -236,7 +235,7 @@ CLrec.bin <- function(data.all, ps, t.fix, mod.class = 'label ~ x1 + x2', ICW = 
     }
     )
     
-    # Estimation
+    # Estimation using SMR model
     formula <- as.formula(paste('Recur(t.start %to% t.stop, id, event)', mod))
     fm <- with(Data, formula)
     fit <- reReg(fm, data = Data, model = "cox.LWYY", B = 0)
