@@ -1,0 +1,90 @@
+rm(list = ls(all = TRUE))
+
+Simu <- function(N, NS, t.fix, gen = 'tree'){
+  
+  # testing data
+  N.test = 5000
+  data.all.test <- data.generation.bin(N = N.test, tau = 4, gen = gen)
+  data.test <- data.frame(opt.treat = data.all.test$g.opt,
+                          x1 = data.all.test$x[,1], x2 = data.all.test$x[,2],
+                          x3 = data.all.test$x[,3], A = data.all.test$A, 
+                          num = data.all.test$num)
+  
+  acc.test <- matrix(NA, NS, 7)
+  num.con <- matrix(NA, NS, 7)
+  num.non <- matrix(NA, NS, 7)
+  num.test <- matrix(NA, NS, 7)
+  con.test <- list()
+  non.test <- list()
+  
+  set.seed(777)
+  for(iter in 1:NS){
+    print(iter)
+    
+    num.max = 300
+    while(num.max >= 300){
+      data.all <- data.generation.bin(N = N, tau = 4, gen = gen)
+      num.max <- max(data.all$num)
+    }
+    
+    
+    pst <- PS.bin(data.all, PS = 'SL')
+    psf <- PS.bin(data.all, PS = 'WRONG')
+    
+    # CL
+    res.sl <- CLrec.bin(data.all, pst, t.fix = t.fix, mod.class = 'label ~ x1 + x2', ICW = 'PO')
+    test.sl <- CLrec.bin.test(res.sl, data.test = data.test)
+    
+    res.drt <- CLrec.bin(data.all, pst, t.fix = t.fix, mod.class = 'label ~ x1 + x2', ICW = 'DR')
+    test.drt <- CLrec.bin.test(res.drt, data.test = data.test)
+    
+    res.drf <- CLrec.bin(data.all, psf, t.fix = t.fix, mod.class = 'label ~ x1 + x2', ICW = 'DR')
+    test.drf <- CLrec.bin.test(res.drf, data.test = data.test)
+    
+    res.smr <- SMR.bin(data.all, t.fix = t.fix)
+    test.smr <-SMR.bin.test(res.smr, data.test)
+    
+    res.sur <- CLrec.bin(data.all, pst, t.fix = t.fix, mod.class = 'label ~ x1 + x2', ICW = 'Sur')
+    test.sur <- CLrec.bin.test(res.sur, data.test = data.test)
+    
+    # random
+    est.rd <- rbinom(N.test, 1, 0.5)
+    test.rd <- test.fun(est.rd, data.test)
+    
+    # Optimal
+    test.opt <- test.fun(data.test$opt.treat, data.test)
+    
+    acc.test[iter, ] <- c(test.sl$est.acc, test.drt$est.acc, test.drf$est.acc, test.smr$est.acc,
+                          test.sur$est.acc, test.rd$est.acc, test.opt$est.acc)
+    con.test[[iter]] <- cbind(test.sl$freq.con, test.drt$freq.con, test.drf$freq.con, test.smr$freq.con,
+                              test.sur$freq.con, test.rd$freq.con, test.opt$freq.con)
+    non.test[[iter]] <- cbind(test.sl$freq.non, test.drt$freq.non, test.drf$freq.non, test.smr$freq.non,
+                              test.sur$freq.non, test.rd$freq.non, test.opt$freq.non)
+    num.con[iter,] <- c(mean(test.sl$est.con), mean(test.drt$est.con), mean(test.drf$est.con),
+                        mean(test.smr$est.con), mean(test.sur$est.con),
+                        mean(test.rd$est.con), mean(test.opt$est.con))
+    num.non[iter,] <- c(mean(test.sl$est.non), mean(test.drt$est.non), mean(test.drf$est.non),
+                        mean(test.smr$est.non), mean(test.sur$est.non),
+                        mean(test.rd$est.non), mean(test.opt$est.non))
+    num.test[iter,] <- c(mean(test.sl$est.num), mean(test.drt$est.num), mean(test.drf$est.num),
+                         mean(test.smr$est.num), mean(test.sur$est.num),
+                         mean(test.rd$est.num), mean(test.opt$est.num))
+    #names(con.test[[iter]]) <- c('CL-SL', 'CL-GLM', 'CL-Wrong', 'Obs', 'Random', 'Optimal')
+    #names(non.test[[iter]]) <- c('CL-SL', 'CL-GLM', 'CL-Wrong', 'Obs', 'Random', 'Optimal')
+  }
+  colnames(acc.test) <- c('CL-PO', 'CL-DR-PST', 'CL-DR-PSF', 'SMR', 'First', 'Random', 'Optimal')
+  colnames(num.test) <- c('CL-PO', 'CL-DR-PST', 'CL-DR-PSF', 'SMR', 'First', 'Random', 'Optimal')
+  
+  return(list(acc.test = acc.test, con.test = con.test, non.test = non.test,
+              num.test = num.test, num.con = num.con, num.non = num.non))
+}
+
+N = 400; NS = 20; t.fix = 3
+res1 <- Simu(N, NS, t.fix = t.fix, gen = 'tree')
+N = 600; NS = 100; t.fix = 3
+res2 <- Simu(N, NS, t.fix = t.fix)
+cc = cbind(rep(-0.15,NS), rep(0, NS), rep(-0.13,NS), rep(0, NS), rep(0, NS))
+names = c('SMR', 'IPW-PST', 'IPW-PSF', 'Obs', 'Random')
+box.fun(res1$acc.test[,c(2,1,3,4,5)], 'Accurary Rate', 'time = 3', color = color)
+names = c('SMR', 'IPW-PST', 'IPW-PSF', 'Obs', 'Random', 'Optimal')
+bar.fun(res1$num.con[,c(1,3,2,4,5,6)], res1$num.non[,c(1,3,2,4,5,6)], main = 'time = 3', range= c(0, 12))
