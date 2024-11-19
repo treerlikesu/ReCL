@@ -23,26 +23,6 @@ library(rpart)
 library(tidyr)
 library(sft)
 
-A.sim <- function(matrix.pi, N){
-  # N: sample size
-  # K: treatment options
-  N <- nrow(matrix.pi)
-  K <- ncol(matrix.pi) 
-  if(N <= 1 | K <= 1) stop("Sample size or treatment options are insufficient!")
-  if(min(matrix.pi) < 0) stop("Treatment probabilities should not be negative!")
-  
-  # normalize probabilities to add up to 1 and simulate treatment A for each row
-  pis <- apply(matrix.pi, 1, sum)
-  probs <- matrix(NA, N, K)
-  A <- rep(NA, N)
-  for(i in 1:N){
-    probs[i,] <- matrix.pi[i,]/pis[i]
-    A[i] <- sample(0:(K - 1), 1, prob = probs[i,])
-    #A[i] <- which(rmultinom(1, 1, prob = probs[i,])==1) - 1
-  }
-  return(A)
-}
-
 expit <- function(x) {exp(x)/(1 + exp(x))}
 
 data.generation.bin <- function(N, tau, gen = 'tree'){
