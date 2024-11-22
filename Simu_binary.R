@@ -55,13 +55,13 @@ Simu <- function(N, NS, t.fix, gen = 'tree'){
                          mean(test.rd$est.num), mean(test.opt$est.num))
    
   }
-  colnames(acc.test) <- c('CL-PO', 'CL-DR-PST', 'CL-DR-PSF', 'SMR', 'First', 'Random', 'Optimal')
-  colnames(num.test) <- c('CL-PO', 'CL-DR-PST', 'CL-DR-PSF', 'SMR', 'First', 'Random', 'Optimal')
+  colnames(acc.test) <- c('CL-IPW', 'CL-AIPW-T', 'CL-AIPW-F', 'CL-SMR', 'First', 'Random', 'Optimal')
+  colnames(num.test) <- c('CL-IPW', 'CL-AIPW-T', 'CL-AIPW-F', 'CL-SMR', 'First', 'Random', 'Optimal')
   
   return(list(acc.test = acc.test, num.test = num.test))
 }
 
-N = 400; NS = 20; t.fix = 3
+N = 400; NS = 100; t.fix = 3
 res1 <- Simu(N, NS, t.fix = t.fix)
 N = 600; NS = 100; t.fix = 3
 res2 <- Simu(N, NS, t.fix = t.fix)
