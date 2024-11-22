@@ -1,6 +1,6 @@
 rm(list = ls(all = TRUE))
 
-Simu <- function(N, NS, t.fix, gen = 'tree'){
+Simu <- function(N, NS, t.fix){
   
   # testing data
   N.test = 5000
