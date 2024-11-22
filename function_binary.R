@@ -25,36 +25,20 @@ library(sft)
 
 expit <- function(x) {exp(x)/(1 + exp(x))}
 
-data.generation.bin <- function(N, tau, gen = 'tree'){
+data.generation.bin <- function(N, tau){
   
-  if(gen == 'tree'){
-    x1 <- rnorm(N, mean = 0, sd = 1) 
-    x2 <- rnorm(N, mean = 0, sd = 1) 
-    x3 <- rnorm(N, mean = 0, sd = 1)
-    x <- data.frame(x1, x2, x3)
+  x1 <- rnorm(N, mean = 0, sd = 1) 
+  x2 <- rnorm(N, mean = 0, sd = 1) 
+  x3 <- rnorm(N, mean = 0, sd = 1)
+  x <- data.frame(x1, x2, x3)
     
-    prob <- expit(0.3*x1 - 0.5*x2)
-    A <- rbinom(N, 1, prob)
-    g.opt <- (x1 > - 1)*(x2 > -0.5)
-    funR <- x2 + abs(1.5*x1 - 0.5)*(A - g.opt)^2 - 0.8
-    rr <- simEventData(z = cbind(1, funR), zCoef = c(0, 1), rho = 0.5, endTime = tau, nProcess = N)
-    cens <- runif(N, tau - 1, tau)
-  }
-  
-  if(gen == 'SMR'){
-    x1 <- rnorm(N, 0, 1) 
-    x2 <- rnorm(N, 0.5, 1) 
-    x3 <- rnorm(N, 0, 1)
-    x <- data.frame(x1, x2, x3)
-    
-    prob <- expit(0.3*x1 - 0.5*x2)
-    A <- rbinom(N, 1, prob)
-    funR <- x1 - x2 + A * (0.5 - x2) - 1
-    g.opt <- I((0.5 - x2) < 0)
-    rr <- simEventData(z = cbind(1, funR), zCoef = c(0, 1), rho = 0.5, endTime = tau, nProcess = N)
-    cens <- runif(N, tau - 1, tau)
-  }
-  
+  prob <- expit(0.3*x1 - 0.5*x2)
+  A <- rbinom(N, 1, prob)
+  g.opt <- (x1 > - 1)*(x2 > -0.5)
+  funR <- x2 + abs(1.5*x1 - 0.5)*(A - g.opt)^2 - 0.8
+  rr <- simEventData(z = cbind(1, funR), zCoef = c(0, 1), rho = 0.5, endTime = tau, nProcess = N)
+  cens <- runif(N, tau - 1, tau)
+
   rr <- cbind(rr, x[rr$ID,], A = A[rr$ID], cens = cens[rr$ID])
   data <- rr
   data$time <- apply(cbind(data$time, data$cens), 1, min)
