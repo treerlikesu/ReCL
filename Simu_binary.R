@@ -21,18 +21,23 @@ Simu <- function(N, NS, t.fix){
     psf <- PS.bin(data.all, PS = 'WRONG')
     
     # CL
+    ## IPW
     res.sl <- CLrec.bin(data.all, pst, t.fix = t.fix, mod.class = 'label ~ x1 + x2', ICW = 'PO')
     test.sl <- CLrec.bin.test(res.sl, data.test = data.test)
-    
+
+    ## AIPW-PST
     res.drt <- CLrec.bin(data.all, pst, t.fix = t.fix, mod.class = 'label ~ x1 + x2', ICW = 'DR')
     test.drt <- CLrec.bin.test(res.drt, data.test = data.test)
-    
+
+    ## AIPW-PSF
     res.drf <- CLrec.bin(data.all, psf, t.fix = t.fix, mod.class = 'label ~ x1 + x2', ICW = 'DR')
     test.drf <- CLrec.bin.test(res.drf, data.test = data.test)
-    
+
+    ## SMR
     res.smr <- SMR.bin(data.all, t.fix = t.fix)
     test.smr <-SMR.bin.test(res.smr, data.test)
-    
+
+    # First
     res.sur <- CLrec.bin(data.all, pst, t.fix = t.fix, mod.class = 'label ~ x1 + x2', ICW = 'Sur')
     test.sur <- CLrec.bin.test(res.sur, data.test = data.test)
     
