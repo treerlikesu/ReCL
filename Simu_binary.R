@@ -11,11 +11,7 @@ Simu <- function(N, NS, t.fix){
                           num = data.all.test$num)
   
   acc.test <- matrix(NA, NS, 7)
-  num.con <- matrix(NA, NS, 7)
-  num.non <- matrix(NA, NS, 7)
   num.test <- matrix(NA, NS, 7)
-  con.test <- list()
-  non.test <- list()
   
   set.seed(777)
   for(iter in 1:NS){
