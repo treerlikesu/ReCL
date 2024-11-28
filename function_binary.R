@@ -170,8 +170,8 @@ CLrec.bin <- function(data.all, ps, t.fix, mod.class = 'label ~ x1 + x2', ICW = 
   class <- sort(unique(A))
   num <- length(class)
   mus <- matrix(NA, length(A), num)
-  if (ICW == 'PO'){
-    # IPTW: Pseudo outcome
+  if (ICW == 'IPW'){
+    # Pseudo outcome
     Pseudo_value_IPW=apply(matrix(c(1:N),1,N),2,function(t){ 
       location=which(Data[,"id"]==t)
       delete_data=Data[-location,]
@@ -186,8 +186,8 @@ CLrec.bin <- function(data.all, ps, t.fix, mod.class = 'label ~ x1 + x2', ICW = 
     mus[,2] <- A*Pseudo_value_IPW/ps
   }
   
-  if (ICW == 'DR'){
-    # IPTW: Pseudo outcome
+  if (ICW == 'AIPW'){
+    # Pseudo outcome
     Pseudo_value_IPW=apply(matrix(c(1:N),1,N),2,function(t){ 
       location=which(Data[,"id"]==t)
       delete_data=Data[-location,]
@@ -211,8 +211,8 @@ CLrec.bin <- function(data.all, ps, t.fix, mod.class = 'label ~ x1 + x2', ICW = 
       (1-A/ps)*Baseline(t.fix, Data, coef, x1, x2, AA = 1)*exp(coef[1]*x1 + coef[2]*x2 + coef[3]*1 + coef[4]*x1 + coef[5]*x2)
   }
   
-  if (ICW == 'Sur'){
-    # IPTW: Pseudo outcome
+  if (ICW == 'First'){
+    # Pseudo outcome
     Pseudo_value_IPW=apply(matrix(c(1:N),1,N),2,function(t){ 
       location=which(Data.sur[,"id"]==t)
       delete_data=Data.sur[-location,]
@@ -224,7 +224,7 @@ CLrec.bin <- function(data.all, ps, t.fix, mod.class = 'label ~ x1 + x2', ICW = 
     mus[,1] <- (1 - A)*Pseudo_value_IPW/(1-ps)
     mus[,2] <- A*Pseudo_value_IPW/ps
   }
-  # Estimate contrast_IPTW
+  # Estimate contrast function
   Contrast <- abs(mus[,2] - mus[,1]) 
   
   label <- ifelse(mus[,2] > mus[,1], 0, 1)
