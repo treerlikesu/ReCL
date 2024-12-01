@@ -233,7 +233,7 @@ CLrec.bin <- function(data.all, ps, t.fix, mod.class = 'label ~ x1 + x2', ICW = 
   
   if(method == 'tree'){
     # fit CART 
-    tree <- rpart(mod.class, weights = Contrast, method = "class", data = , na.action = na.omit)
+    tree <- rpart(mod.class, weights = Contrast, method = "class", data = rpData, na.action = na.omit)
     
     # estimate the OTR
     est.treat <- as.vector(as.numeric(predict(tree, type = "class", newdata = data.frame(x))) - 1)
